@@ -1,10 +1,13 @@
 {
   "name": "vla",
   "dependencies": {
+    "purescript-argonaut-codecs": "^3.1.0",
     "purescript-dom": "git@github.com:rightfold/purescript-dom.git#_readEventTarget",
-    "purescript-stuff": "^1.4.0",
     "purescript-foreign": "^4.0.0",
+    "purescript-hyper": "^0.8.0",
+    "purescript-hyperdrive": "git@github.com:owickstrom/purescript-hyperdrive.git#functor",
+    "purescript-stuff": "^1.4.0",
     "purescript-validation": "^3.1.0",
-    "purescript-argonaut-codecs": "^3.1.0"
+    "purescript-argonaut-core": "^3.1.0"
   }
 }
