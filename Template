@@ -1,0 +1,25 @@
+#!/usr/bin/env perl6
+
+constant HEADER = q:to/HEADER/;
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>VLA</title>
+  </head>
+  <body>
+HEADER
+
+constant FOOTER = q:to/FOOTER/;
+    <script src="/amalgamation.js"></script>
+  </body>
+</html>
+FOOTER
+
+sub MAIN(IO(Cool) $in-path, IO(Cool) $out-path) {
+  my $in = $in-path.open(:!chomp);
+  my $out = $out-path.open(:w);
+  $out.print(HEADER);
+  $in.lines.map: { $out.print($_) };
+  $out.print(FOOTER);
+}

@@ -1,11 +1,13 @@
-all: output/amalgamation.js output/index.html
+HTML_SOURCES=$(shell find src -name '*.html')
+HTML_TARGETS=$(patsubst src/%.html,target/%.html,${HTML_SOURCES})
 
-.PHONY: output/amalgamation.js
-output/amalgamation.js:
+all: target/amalgamation.js ${HTML_TARGETS}
+
+.PHONY: target/amalgamation.js
+target/amalgamation.js:
 	mkdir -p $(dir $@)
 	pulp browserify -m Main.Client -t $@
 
-output/index.html: src/VLA/CRM/Account/Detail.html
+target/%.html: src/%.html Template
 	mkdir -p $(dir $@)
-	cp $< $@
-	echo '<script src="/amalgamation.js"></script>' >> $@
+	./Template $< $@
