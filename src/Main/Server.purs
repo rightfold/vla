@@ -10,13 +10,13 @@ import Hyper.Drive (Application, Request, Response, hyperdrive, response, status
 import Hyper.Node.Server (defaultOptionsWithLogging, runServer)
 import Hyper.Status (statusBadRequest)
 import Stuff hiding (all)
-import VLA.CRM.Account.Web (updateAccount)
+import VLA.CRM.Account.Web (fetchAccount, updateAccount)
 
 main :: IOSync Unit
 main = liftEff $ runServer defaultOptionsWithLogging {} (hyperdrive all)
 
 all :: ∀ f r. Applicative f => Application f (Request String r) (Response String)
-all = overJSON updateAccount
+all = overJSON fetchAccount -- updateAccount
 
 overJSON
   :: ∀ f r i o

@@ -1,5 +1,6 @@
 module VLA.CRM.Account
-  ( Account(..)
+  ( AccountID(..)
+  , Account(..)
   , accountEnabled
   , accountName
   ) where
@@ -7,7 +8,10 @@ module VLA.CRM.Account
 import Data.Argonaut.Decode.Class (class DecodeJson, decodeJson)
 import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.String.NonEmpty (NonEmptyString)
+import Data.UUID (UUID)
 import Stuff
+
+newtype AccountID = AccountID UUID
 
 data Account = Account Boolean NonEmptyString
 
@@ -16,6 +20,9 @@ accountEnabled (Account enabled _) = enabled
 
 accountName :: Account -> NonEmptyString
 accountName (Account _ name) = name
+
+derive newtype instance i3 :: EncodeJson AccountID
+derive newtype instance i4 :: DecodeJson AccountID
 
 instance i1 :: EncodeJson Account where
   encodeJson (Account enabled name) = encodeJson (enabled /\ name)

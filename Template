@@ -8,9 +8,23 @@ constant HEADER = q:to/HEADER/;
     <title>VLA</title>
   </head>
   <body>
+    <div class="main-container">
+      <nav class="main-sidebar">
+        <ul>
+          <li>
+            CRM
+            <ul>
+              <li><a href="/VLA/CRM/Account/Index.html">Accounts</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="main-content">
 HEADER
 
 constant FOOTER = q:to/FOOTER/;
+      </div>
+    </div>
     <script src="/amalgamation.js"></script>
   </body>
 </html>

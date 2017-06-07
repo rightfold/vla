@@ -3,6 +3,10 @@ HTML_TARGETS=$(patsubst src/%.html,target/%.html,${HTML_SOURCES})
 
 all: target/amalgamation.js ${HTML_TARGETS}
 
+.PHONY: test
+test:
+	pulp test
+
 .PHONY: target/amalgamation.js
 target/amalgamation.js:
 	mkdir -p $(dir $@)
