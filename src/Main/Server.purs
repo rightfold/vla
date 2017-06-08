@@ -8,7 +8,7 @@ import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Argonaut.Parser (jsonParser)
 import Hyper.Drive (Application, Request, Response, hyperdrive, response, status)
 import Hyper.Node.Server (defaultOptionsWithLogging, runServer)
-import Hyper.Status (statusBadRequest)
+import Hyper.Status (statusBadRequest, statusNotFound)
 import Stuff hiding (all)
 import VLA.CRM.Account.Web (fetchAccount, updateAccount)
 
@@ -16,7 +16,10 @@ main :: IOSync Unit
 main = liftEff $ runServer defaultOptionsWithLogging {} (hyperdrive all)
 
 all :: ∀ f r. Applicative f => Application f (Request String r) (Response String)
-all = overJSON fetchAccount -- updateAccount
+all req = case (unwrap req).url of
+  "/CRM/Account/fetchAccount" -> overJSON fetchAccount req
+  "/CRM/Account/updateAccount" -> overJSON updateAccount req
+  _ -> response "null" # status statusNotFound # pure
 
 overJSON
   :: ∀ f r i o
