@@ -21,8 +21,15 @@ accountEnabled (Account enabled _) = enabled
 accountName :: Account -> NonEmptyString
 accountName (Account _ name) = name
 
+instance i5 :: Show AccountID where
+  show (AccountID uuid) = "(AccountID " <> show uuid <> ")"
+
 derive newtype instance i3 :: EncodeJson AccountID
 derive newtype instance i4 :: DecodeJson AccountID
+
+instance i6 :: Show Account where
+  show (Account enabled name) =
+    "(Account " <> show enabled <> " " <> show name <> ")"
 
 instance i1 :: EncodeJson Account where
   encodeJson (Account enabled name) = encodeJson (enabled /\ name)

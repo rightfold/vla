@@ -17,6 +17,10 @@ fromString = map (NonEmptyString <$> _.head <*> _.tail) <<< String.uncons
 toString :: NonEmptyString -> String
 toString (NonEmptyString c cs) = String.singleton c <> cs
 
+instance i3 :: Show NonEmptyString where
+  show (NonEmptyString c cs) =
+    "(NonEmptyString " <> show c <> " " <> show cs <> ")"
+
 instance i1 :: EncodeJson NonEmptyString where
   encodeJson = encodeJson <<< toString
 

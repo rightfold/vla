@@ -9,7 +9,8 @@
     "purescript-stuff": "^1.4.0",
     "purescript-validation": "^3.1.0",
     "purescript-argonaut-core": "^3.1.0",
-    "purescript-quickcheck": "^4.3.0"
+    "purescript-quickcheck": "^4.3.0",
+    "purescript-free": "^4.0.1"
   },
   "devDependencies": {
     "purescript-spec": "^1.0.0"
