@@ -12,11 +12,11 @@ import VLA.CRM.Account.Algebra (Accounts(..))
 
 runAccounts :: ∀ m a. MonadIO m => Accounts a -> m a
 runAccounts (FetchAccount accountID next) =
-  next <$> request "/CRM/Account/fetchAccount" accountID
+  next <$> request "http://vbox.example.com:3000/CRM/Account/fetchAccount" accountID
 runAccounts (UpdateAccount accountID account next) =
-  next <$> request "/CRM/Account/updateAccount" (accountID /\ account)
+  next <$> request "http://vbox.example.com:3000/CRM/Account/updateAccount" (accountID /\ account)
 
 request :: ∀ m i o. MonadIO m => EncodeJson i => DecodeJson o => String -> i -> m (Either Error o)
 request url req = liftIO \ liftAff $ do
   res <- try $ AJAX.post url (encodeJson req)
-  pure $ lmap error \ decodeJson \ _.response =<< res
+  pure $ lmap error \ join \ decodeJson \ _.response =<< res

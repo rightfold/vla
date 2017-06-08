@@ -11,7 +11,8 @@
     "purescript-argonaut-core": "^3.1.0",
     "purescript-quickcheck": "^4.3.0",
     "purescript-free": "^4.0.1",
-    "purescript-affjax": "^4.0.0"
+    "purescript-affjax": "^4.0.0",
+    "purescript-http-methods": "^3.0.0"
   },
   "devDependencies": {
     "purescript-spec": "^1.0.0"

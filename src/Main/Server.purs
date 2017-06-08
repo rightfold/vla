@@ -8,9 +8,10 @@ import Data.Argonaut.Core (stringify)
 import Data.Argonaut.Decode.Class (class DecodeJson, decodeJson)
 import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Argonaut.Parser (jsonParser)
-import Hyper.Drive (Request, Response, hyperdrive, response, status)
+import Data.HTTP.Method (Method(..))
+import Hyper.Drive (Request, Response, header, hyperdrive, response, status)
 import Hyper.Node.Server (defaultOptionsWithLogging, runServer)
-import Hyper.Status (statusBadRequest, statusNotFound)
+import Hyper.Status (statusBadRequest, statusMethodNotAllowed, statusNotFound)
 import Stuff hiding (all)
 import VLA.CRM.Account.Algebra (Accounts, fetchAccount, updateAccount)
 import VLA.CRM.Account.Dummy as Account.Dummy
@@ -23,7 +24,7 @@ main = liftEff \ runServer defaultOptionsWithLogging {} $
   hyperdrive (runIO' \ all)
 
 all :: ∀ f r. MonadIOSync f => MonadRec f => Request String r -> f (Response String)
-all req = case (unwrap req).url of
+all = withCORS $ withMethodCheck $ \req -> case (unwrap req).url of
   "/CRM/Account/fetchAccount" -> handle (foldFree runAccounts) fetchAccount req
   "/CRM/Account/updateAccount" -> handle (foldFree runAccounts) (uncurry updateAccount) req
   _ -> response "null" # status statusNotFound # pure
@@ -34,6 +35,30 @@ runAccounts :: ∀ m a. MonadIOSync m => Accounts a -> m a
 runAccounts = (*>) <$> Account.Log.runAccounts <*> Account.Dummy.runAccounts
 
 --------------------------------------------------------------------------------
+
+withCORS
+  :: ∀ f i o r
+   . Functor f
+  => (Request i r -> f (Response o))
+  -> Request i r
+  -> f (Response o)
+withCORS go req =
+  header ("Access-Control-Allow-Headers" /\ "Content-Type") <$>
+  header ("Access-Control-Allow-Methods" /\ "POST, OPTIONS") <$>
+  header ("Access-Control-Allow-Origin" /\ "*") <$>
+  go req
+
+withMethodCheck
+  :: ∀ f i r
+   . Applicative f
+  => (Request i r -> f (Response String))
+  -> Request i r
+  -> f (Response String)
+withMethodCheck go req =
+  case (unwrap req).method of
+    Left POST -> go req
+    Left OPTIONS -> response "null" # pure
+    _ -> response "null" # status statusMethodNotAllowed # pure
 
 handle
   :: ∀ f f' i o r
