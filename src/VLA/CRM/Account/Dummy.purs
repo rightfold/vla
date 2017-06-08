@@ -8,8 +8,8 @@ import VLA.CRM.Account (Account(..))
 import VLA.CRM.Account.Algebra (Accounts(..))
 
 runAccounts :: ∀ m a. Applicative m => Accounts a -> m a
-runAccounts (FetchAccount next _) = pure \ next $ Right (Just account)
-runAccounts (UpdateAccount next _ _) = pure \ next $ Right unit
+runAccounts (FetchAccount _ next) = pure \ next $ Right (Just account)
+runAccounts (UpdateAccount _ _ next) = pure \ next $ Right unit
 
 account :: Account
 account = Account true (NonEmptyString 'A' "CME Inc.")
