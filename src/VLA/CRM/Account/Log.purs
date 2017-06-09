@@ -7,6 +7,8 @@ import VLA.CRM.Account.Algebra (Accounts(..))
 
 runAccounts :: ∀ m a. MonadIOSync m => Accounts a -> m Unit
 runAccounts (FetchAccount accountID _) = liftIOSync $
-  log $ "FetchAccount _ " <> show accountID
+  log $ "fetchAccount " <> show accountID
+runAccounts (CreateAccount accountID account _) = liftIOSync $
+  log $ "createAccount " <> show accountID <> " " <> show account
 runAccounts (UpdateAccount accountID account _) = liftIOSync $
-  log $ "UpdateAccount _ " <> show accountID <> " " <> show account
+  log $ "updateAccount " <> show accountID <> " " <> show account

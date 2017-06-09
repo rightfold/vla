@@ -5,5 +5,6 @@ import VLA.CRM.Account (Account, AccountID);
 
 algebra Accounts {
   method fetchAccount(AccountID): Error \/ Maybe Account;
+  method createAccount(AccountID, Account): Error \/ Unit;
   method updateAccount(AccountID, Account): Error \/ Unit;
 }

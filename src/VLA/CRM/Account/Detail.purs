@@ -8,19 +8,22 @@ import Data.Validation.Semigroup (unV)
 import DOM.Form (booleanField, nonEmptyStringField)
 import DOM.Util (getEventTargetById, handleClick)
 import Stuff
-import VLA.CRM.Account (Account(..), AccountID, accountEnabled, accountName)
-import VLA.CRM.Account.Algebra (Accounts, fetchAccount)
+import VLA.CRM.Account (Account(..), AccountID, accountEnabled, accountName, newAccountID)
+import VLA.CRM.Account.Algebra (Accounts, createAccount, fetchAccount, updateAccount)
 
 initializeForm :: (Free Accounts ~> IO) -> Maybe AccountID -> IO Unit
-initializeForm foldAccounts Nothing =
-  initializeForm' traceAnyA Nothing
+initializeForm foldAccounts Nothing = do
+  accountID <- newAccountID
+  initializeForm' (foldAccounts \ createAccount accountID) Nothing
 initializeForm foldAccounts (Just accountID) =
   foldAccounts (fetchAccount accountID) >>= case _ of
     Left err -> traceAnyA err *> pure unit
     Right Nothing -> traceAnyA "not found" *> pure unit
-    Right (Just account) -> initializeForm' traceAnyA (Just account)
+    Right (Just account) ->
+      initializeForm' (foldAccounts \ updateAccount accountID)
+                      (Just account)
 
-initializeForm' :: ∀ m. MonadIOSync m => (Account -> IOSync Unit) -> Maybe Account -> m Unit
+initializeForm' :: ∀ m. MonadIOSync m => (Account -> IO (Either Error Unit)) -> Maybe Account -> m Unit
 initializeForm' save account = do
   newAccount <- map unwrap \ unwrap $
     Account
@@ -28,7 +31,7 @@ initializeForm' save account = do
     <*> nonEmptyStringField "account-name" (accountName <$> account)
 
   saveB <- getEventTargetById "account-save"
-  handleClick saveB $
-    unV traceAnyA save =<< newAccount
+  handleClick saveB \ launchIO $
+    unV traceAnyA (void \ save) =<< newAccount
 
   pure unit

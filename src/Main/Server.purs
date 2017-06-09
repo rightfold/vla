@@ -13,7 +13,7 @@ import Hyper.Drive (Request, Response, header, hyperdrive, response, status)
 import Hyper.Node.Server (defaultOptionsWithLogging, runServer)
 import Hyper.Status (statusBadRequest, statusMethodNotAllowed, statusNotFound)
 import Stuff hiding (all)
-import VLA.CRM.Account.Algebra (Accounts, fetchAccount, updateAccount)
+import VLA.CRM.Account.Algebra (Accounts, createAccount, fetchAccount, updateAccount)
 import VLA.CRM.Account.Dummy as Account.Dummy
 import VLA.CRM.Account.Log as Account.Log
 
@@ -26,6 +26,7 @@ main = liftEff \ runServer defaultOptionsWithLogging {} $
 all :: ∀ f r. MonadIOSync f => MonadRec f => Request String r -> f (Response String)
 all = withCORS $ withMethodCheck $ \req -> case (unwrap req).url of
   "/CRM/Account/fetchAccount" -> handle (foldFree runAccounts) fetchAccount req
+  "/CRM/Account/createAccount" -> handle (foldFree runAccounts) (uncurry createAccount) req
   "/CRM/Account/updateAccount" -> handle (foldFree runAccounts) (uncurry updateAccount) req
   _ -> response "null" # status statusNotFound # pure
 

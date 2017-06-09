@@ -1,10 +1,12 @@
 module Data.UUID
   ( UUID(..)
   , nil
+  , newUUID
   , toString
   , fromString
   ) where
 
+import Control.Monad.Eff.Random (randomInt)
 import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Argonaut.Decode.Class (class DecodeJson, decodeJson)
 import Data.Int as Int
@@ -16,6 +18,10 @@ data UUID = UUID Int Int Int Int
 
 nil :: UUID
 nil = UUID 0 0 0 0
+
+newUUID :: ∀ m. MonadIOSync m => m UUID
+newUUID = UUID <$> random <*> random <*> random <*> random
+  where random = liftIOSync \ liftEff $ randomInt bottom top
 
 toString :: UUID -> String
 toString (UUID a b c d) =

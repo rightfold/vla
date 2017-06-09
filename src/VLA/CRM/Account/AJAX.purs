@@ -13,6 +13,8 @@ import VLA.CRM.Account.Algebra (Accounts(..))
 runAccounts :: ∀ m a. MonadIO m => Accounts a -> m a
 runAccounts (FetchAccount accountID next) =
   next <$> request "http://vbox.example.com:3000/CRM/Account/fetchAccount" accountID
+runAccounts (CreateAccount accountID account next) =
+  next <$> request "http://vbox.example.com:3000/CRM/Account/createAccount" (accountID /\ account)
 runAccounts (UpdateAccount accountID account next) =
   next <$> request "http://vbox.example.com:3000/CRM/Account/updateAccount" (accountID /\ account)
 
