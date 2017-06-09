@@ -1,0 +1,6 @@
+{
+  "name": "vla",
+  "dependencies": {
+    "pg": "^6.2.3"
+  }
+}

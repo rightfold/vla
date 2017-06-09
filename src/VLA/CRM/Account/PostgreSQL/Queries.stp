@@ -1,0 +1,18 @@
+module VLA.CRM.Account.PostgreSQL.Queries;
+
+import Data.UUID (UUID);
+
+query fetchAccount =
+  SELECT enabled, name
+  FROM accounts
+  WHERE id = $1;
+
+query createAccount =
+  INSERT INTO accounts (id, enabled, name)
+  VALUES ($1, $2, $3);
+
+query updateAccount =
+  UPDATE accounts
+  SET enabled = $2
+    , name = $3
+  WHERE id = $1;

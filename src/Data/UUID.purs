@@ -11,6 +11,7 @@ import Data.Argonaut.Encode.Class (class EncodeJson, encodeJson)
 import Data.Argonaut.Decode.Class (class DecodeJson, decodeJson)
 import Data.Int as Int
 import Data.String as String
+import Database.PostgreSQL.Value (class FromSQLValue, class ToSQLValue, fromSQLValue, toSQLValue)
 import Stuff
 import Test.QuickCheck (class Arbitrary, arbitrary)
 
@@ -68,6 +69,13 @@ instance i1 :: EncodeJson UUID where
 
 instance i2 :: DecodeJson UUID where
   decodeJson = fromString' <=< decodeJson
+    where fromString' = maybe (Left "Value is not a UUID") Right <<< fromString
+
+instance i7 :: ToSQLValue UUID where
+  toSQLValue = toSQLValue \ toString
+
+instance i8 :: FromSQLValue UUID where
+  fromSQLValue = fromString' <=< fromSQLValue
     where fromString' = maybe (Left "Value is not a UUID") Right <<< fromString
 
 instance i5 :: Arbitrary UUID where

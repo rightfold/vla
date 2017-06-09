@@ -22,7 +22,7 @@ instance i3 :: Show NonEmptyString where
     "(NonEmptyString " <> show c <> " " <> show cs <> ")"
 
 instance i1 :: EncodeJson NonEmptyString where
-  encodeJson = encodeJson <<< toString
+  encodeJson = encodeJson \ toString
 
 instance i2 :: DecodeJson NonEmptyString where
   decodeJson = fromString' <=< decodeJson

@@ -26,6 +26,8 @@ instance i5 :: Show AccountID where
 derive newtype instance i3 :: EncodeJson AccountID
 derive newtype instance i4 :: DecodeJson AccountID
 
+derive instance i7 :: Newtype AccountID _
+
 --------------------------------------------------------------------------------
 
 data Account = Account Boolean NonEmptyString

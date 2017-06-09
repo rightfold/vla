@@ -12,4 +12,4 @@ import VLA.CRM.Account.Detail (initializeForm)
 main :: IOSync Unit
 main = launchIO $
   initializeForm (foldFree Account.AJAX.runAccounts)
-                 Nothing -- (Just (AccountID nil))
+                 (Just (AccountID nil))
